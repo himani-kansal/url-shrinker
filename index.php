@@ -19,9 +19,9 @@ if (!empty($_GET['url'])) {
   $row=$result->fetch_assoc();
   if(!empty($row))
   {
-	$r = "http://".str_replace("http://","",$row["url_link"]);
-	header('HTTP/1.1 301 Moved Permanently');  
-	header('Location: '.$r);  
+  $r = "http://".str_replace("http://","",$row["url_link"]);
+  header('HTTP/1.1 301 Moved Permanently');  
+  header('Location: '.$r);  
   }
   else
   {
@@ -37,12 +37,12 @@ if (!empty($_POST['url'])) {
 $short = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 3);
 $queryInsert ="INSERT INTO urltable (url_link, url_short, url_ip, url_date) VALUES
 
-	(
-	'".addslashes($_POST['url'])."',
-	'".$short."',
-	'".$_SERVER['REMOTE_ADDR']."',
-	'".time()."'
-	)  ";
+  (
+  '".addslashes($_POST['url'])."',
+  '".$short."',
+  '".$_SERVER['REMOTE_ADDR']."',
+  '".time()."'
+  )  ";
 $queryInsertResult = $conn->query($queryInsert);
 $row = "?s=$short";
 header('Location: '.$row); 
@@ -63,8 +63,8 @@ die;
 <title>Url Shrinker</title>
 <style type="text/css">
 body,nav
-	{
-		background: url('bg.jpg');
+  {
+    background: url('bg.jpg');
 -webkit-animation: backgroundScroll 20s linear infinite;
 animation: backgroundScroll 20s linear infinite;
 }
@@ -80,7 +80,7 @@ to {background-position: -400px 0;}
 }
 nav
 {
-	background-color: blue;
+  background-color: blue;
 }
 </style>
 </head>
@@ -127,7 +127,7 @@ nav
 <!--if form was just posted-->
 <?php if (!empty($_GET['s'])) { ?>
 <br />
-<h2 style="text-align:center; color:white;">Here's the short URL: <a href="<?php echo $server_name; ?><?php echo $_GET['s']; ?>" target="_blank" style="color:   #7bea7b;"><?php echo $server_name; ?><?php echo $_GET['s']; ?></a></h2>
+<h2 style="text-align:center; color:white;">Here's the short URL: <a href="<?php echo "?url=" ?><?php echo $_GET['s']; ?>" target="_blank" style="color:   #7bea7b;"><?php echo "http://localhost/url_shrinker/index.php?url="; ?><?php echo $_GET['s']; ?></a></h2>
 <?php } ?>
 <!---->
       <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
