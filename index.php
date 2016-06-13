@@ -14,13 +14,19 @@ $server_name="http://".$_SERVER['HTTP_HOST']."/";
 
 //redirect to real link if URL is set
 if (!empty($_GET['url'])) {
-  echo"hello";
   $query="SELECT url_link FROM urltable WHERE url_short = '".$_GET['url']."'";
   $result=$conn->query($query);
   $row=$result->fetch_assoc();
-	$row = "http://".str_replace("http://","",$row["url_link"]);
+  if(!empty($row))
+  {
+	$r = "http://".str_replace("http://","",$row["url_link"]);
 	header('HTTP/1.1 301 Moved Permanently');  
-	header('Location: '.$row);  
+	header('Location: '.$r);  
+  }
+  else
+  {
+    die("Connection failed :");
+  }
 }
 
 
@@ -29,7 +35,6 @@ if (!empty($_GET['url'])) {
 if (!empty($_POST['url'])) {
 //make url short link by shuffling the string
 $short = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 3);
-
 $queryInsert ="INSERT INTO urltable (url_link, url_short, url_ip, url_date) VALUES
 
 	(
@@ -40,7 +45,8 @@ $queryInsert ="INSERT INTO urltable (url_link, url_short, url_ip, url_date) VALU
 	)  ";
 $queryInsertResult = $conn->query($queryInsert);
 $row = "?s=$short";
-header('Location: '.$row); die;
+header('Location: '.$row); 
+die;
 
 }
 //
