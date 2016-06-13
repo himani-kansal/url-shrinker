@@ -1,35 +1,46 @@
 <?php 
 
 //include database connection details
-include('db.php');
+include 'db.php';
+//connect to MYSQL database
+$conn= new mysqli($servername,$username,$password,$dbname);
+
+if($conn->connect_error)
+{
+  die("Connection failed :" .$conn->connect_error);
+}
+
+$server_name="http://".$_SERVER['HTTP_HOST']."/";
 
 //redirect to real link if URL is set
 if (!empty($_GET['url'])) {
-	$redirect = mysql_fetch_assoc(mysql_query("SELECT url_link FROM urls WHERE url_short = '".addslashes($_GET['url'])."'"));
-	$redirect = "http://".str_replace("http://","",$redirect[url_link]);
+  echo"hello";
+  $query="SELECT url_link FROM urltable WHERE url_short = '".$_GET['url']."'";
+  $result=$conn->query($query);
+  $row=$result->fetch_assoc();
+	$row = "http://".str_replace("http://","",$row["url_link"]);
 	header('HTTP/1.1 301 Moved Permanently');  
-	header("Location: ".$redirect);  
+	header('Location: '.$row);  
 }
- //
+
+
 
 //insert new url
 if (!empty($_POST['url'])) {
-//get random string for URL and add http:// if not already there
+//make url short link by shuffling the string
 $short = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 3);
 
-mysql_query("INSERT INTO urltable (url_link, url_short, url_ip, url_date) VALUES
+$queryInsert ="INSERT INTO urltable (url_link, url_short, url_ip, url_date) VALUES
 
 	(
 	'".addslashes($_POST['url'])."',
 	'".$short."',
 	'".$_SERVER['REMOTE_ADDR']."',
 	'".time()."'
-	)
-
-");
-
-$redirect = "?s=$short";
-header('Location: '.$redirect); die;
+	)  ";
+$queryInsertResult = $conn->query($queryInsert);
+$row = "?s=$short";
+header('Location: '.$row); die;
 
 }
 //
